@@ -1,4 +1,4 @@
-# apis/survey.py
+# apis/inquiry.py
 """
 This module defines the Flask-RestX resources for the Home Safety Rating API.
 
@@ -8,9 +8,7 @@ and anomaly detection on that data.
 """
 from flask_restx import Namespace, Resource
 from flask import request
-from flask import jsonify
 from db_config import db
-from pymongo.mongo_client import MongoClient
 
 inquiry = db.inquiry
 
@@ -25,12 +23,13 @@ inquiry_api = Namespace(
 class Saving(Resource):
     def post(self):
         params = request.get_json()
+        print(params)
         result = {}
         result['id'] = int(params['id'])
         result['inquiry_message'] = str(params['inquiry_message'])
 
         try: 
-           
+           print(result)
            inquiry.insert_one(result)
 
            return "success"

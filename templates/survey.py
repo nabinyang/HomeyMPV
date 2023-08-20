@@ -1,24 +1,13 @@
 # apis/survey.py
-"""
-This module defines the Flask-RestX resources for the Home Safety Rating API.
 
-The Home Safety Rating API provides resources for fetching safety-related data 
-based on geographical location and for performing safety rating calculations 
-and anomaly detection on that data.
-"""
 from flask_restx import Namespace, Resource
 from flask import request
-from flask import jsonify
 from db_config import db
-import json
-from bson import json_util 
-
 from datetime import datetime
+from kakao_config import api
 
-#from pymongo.mongo_client import MongoClient
 
 homeSurveys = db.homeSurveys
-generalSurveys = db.generalSurveys
 alarm = db.alarm
 
 survey_api = Namespace(
@@ -51,7 +40,7 @@ class SavingHomeSurvey(Resource):
         result['reason'] = str(params['reason'])
         result['yesOrNo'] = list(params['yesOrNo'])
         result['timestamp'] = now.strftime("%Y/%m/%d/%H")
-        #return result
+        result['confirm'] = False
 
         
         try:
@@ -81,7 +70,7 @@ class SavingHomeSurvey(Resource):
 class ShowingHomeSurvey(Resource):
     def get(self):
         params = request.get_json()
-        #print(params['id'])
+        
         try:
             survey = homeSurveys.find_one({'id': int(params['id']), 'surveyNo': int(params['surveyNo'])})
             print(type(survey))
@@ -117,22 +106,26 @@ class ShowingHomeSurvey(Resource):
 class ShowingHomeSurvey(Resource):
     def post(self):
         params = request.get_json()
-        #print(params['id'])
+        
         try:
             surveys = homeSurveys.find({'id': int(params['id'])})
             print(type(surveys))
-            #for survey in surveys:
-            #    print(survey)
+            
             if surveys is None:
                 return '저장된 결과 없음'
             else:
                 list = []
                 for survey in surveys:
-                    result = {}
-                    result['address'] = survey['address']
-                    result['time'] = survey['timestamp']
-                    print(result)
-                    list.append(result)
+                    myDict = {}
+                    myDict['address'] = survey['address']
+                    myDict['time'] = survey['timestamp']
+                    result = api.search_address(survey['address'])
+                    if result['meta']['total_count'] > 0:
+                        myDict['coords'] = [result['documents'][0]['y'], result['documents'][0]['x']]
+                    myDict['confirm'] = survey['confirm']
+                             
+                    print(myDict)
+                    list.append(myDict)
 
                 return list
             
@@ -140,71 +133,3 @@ class ShowingHomeSurvey(Resource):
             
             return e
 
-
-@survey_api.route('/saveGeneralSurvey')
-class SavingGeneralSurvey(Resource):
-    def post(self):
-
-        params = request.get_json()
-        result = {}
-        # page 1
-        result['id'] = int(params['id'])
-        result['safeLevel'] = int(params['safeLevel'])
-        result['preventionFacility'] = int(params['preventionFacility'])
-        result['location'] = int(params['location'])
-        result['neighbors'] = int(params['neighbors'])
-        result['ambience'] = int(params['ambience'])
-        result['facility'] = int(params['facility'])
-        result['ent'] = int(params['ent'])
-        result['accident'] = int(params['accident'])
-        result['reason'] = str(params['reason'])
-        #page2
-        result['importance'] = list(params['importance'])
-        result['floor'] = int(params['floor'])
-        result['road'] = int(params['road'])
-        result['size'] = int(params['size'])
-        result['new'] = int(params['new'])
-        result['safeFacility'] = list(params['safeFacility'])
-        result['extraSafeFacility'] = str(params['extraSafeFacility'])
-        try: 
-           
-           generalSurveys.insert_one(result)
-
-           return "success"
-        except Exception as e:
-            
-            return e
-        
-@survey_api.route('/showGeneralSurvey')
-class ShowingGeneralSurvey(Resource):
-    def get(self):
-        params = request.get_json()
-        try:
-            survey = generalSurveys.find_one({'id': params['id']})
-            if survey is None:
-                return '저장된 결과 없음'
-            else:
-                result = {}
-                # page 1
-                result['id'] = survey['id']
-                result['safeLevel'] = survey['safeLevel']
-                result['preventionFacility'] = survey['preventionFacility']
-                result['location'] = survey['location']
-                result['neighbors'] = survey['neighbors']
-                result['ambience'] = survey['ambience']
-                result['facility'] = survey['facility']
-                result['ent'] = survey['ent']
-                result['accident'] = survey['accident']
-                result['reason'] = survey['reason']
-                #page2
-                result['importance'] = survey['importance']
-                result['floor'] = survey['floor']
-                result['road'] = survey['road']
-                result['size'] = survey['size']
-                result['new'] = survey['new']
-                result['safeFacility'] = survey['safeFacility']
-                result['extraSafeFacility'] = survey['extraSafeFacility']
-                return survey
-        except Exception as e:
-            
-            return e
