@@ -34,10 +34,7 @@ class Saving(Resource):
             else: 
                 list = []
                 for result in results:
-                    myDict = {}
-                    myDict["id"] = result["id"]
-                    myDict["alarm"] = result["alarm"]
-                    list.append(myDict)
+                    list.append("설문결과완료")
                 return list
         except Exception as e: 
             return e
