@@ -273,6 +273,7 @@ class RelativeRating(Resource):
                 rel_result["id"] = params['id']
                 rel_result["surveyNo"] = params['surveyNo']
                 rel_result["address"] = row['address']
+                rel_result["coords"] = [float(row['latitude']), float(row['longitude'])]
                 rel_result["rating"] = relative_ratings['tot_grade']
                 rel_result["total_score"] = score['total score']
                 rel_result["location_percent"] = relative_ratings['loc_percent']
