@@ -84,7 +84,7 @@ def count_place(latitude, longitude, radius=1,
     """
     
     # List of filenames
-    base_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets\datasets\coordinate_based')
+    base_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets/datasets/coordinate_based')
     print('base_dir:', base_dir)
     results = {}
     result = {"counts": {}, "list": {}}
