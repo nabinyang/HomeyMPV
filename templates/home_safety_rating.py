@@ -212,10 +212,12 @@ class RelativeRating(Resource):
         """
         # Get latitude and longitude from the query parameters
         params = request.get_json()
+        result = {}
+        result['id'] = int(params['id'])
+        result['surveyNo'] = int(params['surveyNo'])
         #print(params)
         try:
-            
-            survey = surveys.find_one(params,{'_id':0})
+            survey = surveys.find_one(result,{'_id':0})
             print(survey)
             if survey is None:
                 return '저장된 결과 없음'
