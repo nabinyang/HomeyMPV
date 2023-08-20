@@ -28,12 +28,13 @@ class Saving(Resource):
         params = request.get_json()
 
         try: 
-            result = alarm.find_one({'id':int(params['id'])})
-            if result is None:
+            results = alarm.find({'id':int(params['id'])})
+            if results is None:
                 return 'No result'
             else: 
-
-                
-                return result['alarm']
+                list = []
+                for result in results:
+                    list.append("설문결과완료")
+                return list
         except Exception as e: 
             return e
