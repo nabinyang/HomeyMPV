@@ -85,7 +85,7 @@ def count_place(latitude, longitude, radius=1,
     
     # List of filenames
     base_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets/datasets/coordinate_based')
-    print('base_dir:', base_dir)
+    #print('base_dir:', base_dir)
     results = {}
     result = {"counts": {}, "list": {}}
     # Iterate over each file
@@ -93,7 +93,7 @@ def count_place(latitude, longitude, radius=1,
         # Join the base directory path and file name
         full_path = os.path.join(base_dir, file)
         df = pd.read_csv(full_path)
-        print('full_path: ', full_path)
+        #print('full_path: ', full_path)
         # Convert the latitude and longitude to numeric
         df['latitude'] = pd.to_numeric(df['latitude'], errors='coerce')
         df['longitude'] = pd.to_numeric(df['longitude'], errors='coerce')
