@@ -203,14 +203,18 @@ def relative_rating(my_location_score, my_facility_score, my_support_score, my_t
     #print(count)
     result = {}
     result['loc_percent'] = percentile_rank(location_scores, my_location_score)
-    print(my_location_score)
-    #result['loc_percent'] = (my_location_score/3280) * 100
+    #print(my_location_score)
+    if  result['loc_percent'] < 1:
+        result['loc_percent'] = (my_location_score/3280) * 100
+    
     result['fac_percent'] = percentile_rank(facility_scores, my_facility_score)
-    print(my_facility_score)
-    #result['fac_percent'] = (my_facility_score/230) * 100
-    #result['sup_percent'] = percentile_rank(support_scores, my_support_score)
-    print(my_support_score)
-    result['sup_percent'] = (my_support_score/10420) * 100
+    if  result['loc_percent'] < 1:
+        result['fac_percent'] = (my_facility_score/230) * 100
+    #print(my_facility_score)
+    #
+    result['sup_percent'] = percentile_rank(support_scores, my_support_score)
+    if  result['sup_percent'] < 1:
+        result['sup_percent'] = (my_support_score/10420) * 100
     result['tot_grade'] = assign_grade(percentile_rank(total_scores, my_total_score))
     return result
     '''
