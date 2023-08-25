@@ -169,16 +169,18 @@ def assign_grade(score):
         return 4
     elif score >= 50:
         return 5
-    elif score >= 40:
-        return 6
-    elif score >= 30:
-        return 7
-    elif score >= 20:
-        return 8
-    elif score >= 10:
-        return 9
     else:
-        return 10
+        return 6
+    # elif score >= 40:
+    #     return 6
+    # elif score >= 30:
+    #     return 7
+    # elif score >= 20:
+    #     return 8
+    # elif score >= 10:
+    #     return 9
+    # else:
+    #     return 10
 # 사용 예시
 #all_scores = [85, 90, 78, 95, 67, 88, 76, 92, 81, 70]
 #input_score = int(input("Enter a score: "))
@@ -201,8 +203,14 @@ def relative_rating(my_location_score, my_facility_score, my_support_score, my_t
     #print(count)
     result = {}
     result['loc_percent'] = percentile_rank(location_scores, my_location_score)
+    print(my_location_score)
+    #result['loc_percent'] = (my_location_score/3280) * 100
     result['fac_percent'] = percentile_rank(facility_scores, my_facility_score)
-    result['sup_percent'] = percentile_rank(support_scores, my_support_score)
+    print(my_facility_score)
+    #result['fac_percent'] = (my_facility_score/230) * 100
+    #result['sup_percent'] = percentile_rank(support_scores, my_support_score)
+    print(my_support_score)
+    result['sup_percent'] = (my_support_score/10420) * 100
     result['tot_grade'] = assign_grade(percentile_rank(total_scores, my_total_score))
     return result
     '''
